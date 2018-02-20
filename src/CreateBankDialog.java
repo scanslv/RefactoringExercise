@@ -1,5 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -18,108 +17,99 @@ import net.miginfocom.swing.MigLayout;
 
 public class CreateBankDialog extends JFrame {
     private final static int TABLE_SIZE = 29;
+    private final String[] accounts = new String[]{"Current", "Deposit"};
     private Random rand = new Random();
     private HashMap<Integer, BankAccount> table = new HashMap<>();
 
-    public void put(int key, BankAccount value) {
-        int hash = (key % TABLE_SIZE);
-
-        while (table.containsKey(key)) {
-            hash = hash + 1;
-        }
-        table.put(hash, value);
-    }
-
     private JTextField accountNumberTextField;
-    private final JTextField firstNameTextField;
-    private final JTextField surnameTextField;
-    private final JTextField balanceTextField;
-    private final JTextField overdraftTextField;
+    private JTextField firstNameTextField;
+    private JTextField surnameTextField;
+    private JTextField balanceTextField, overdraftTextField;
+    private JComboBox comboBox;
 
-    CreateBankDialog(HashMap accounts) {
+    private String accountNumber;
+    private String surname;
+    private String firstName;
+    private String accountType;
+
+    CreateBankDialog(HashMap<Integer, BankAccount> accounts) {
         super("Add Bank Details");
         table = accounts;
         setLayout(new BorderLayout());
-        JPanel dataPanel = new JPanel(new MigLayout());
-        String[] comboTypes = {"Current", "Deposit"};
-        final JComboBox comboBox = new JComboBox(comboTypes);
-        accountNumberTextField = new JTextField(15);
-        JLabel accountNumberLabel = new JLabel("Account Number: ");
-        accountNumberTextField = new JTextField(15);
+
+        setUpTextFields();
+        add(setUpDataPanel(), BorderLayout.CENTER);
+        add(setUpButtonPanel(), BorderLayout.SOUTH);
+
+        setSize(400, 800);
+        pack();
+        setVisible(true);
+    }
+
+    private void setUpTextFields(){
+        final int nrOfColumns = 15;
+        final int nrOfCurrencyColumns = 10;
+
+        accountNumberTextField = new JTextField(nrOfColumns);
         accountNumberTextField.setEditable(true);
 
-        dataPanel.add(accountNumberLabel, "growx, pushx");
-        dataPanel.add(accountNumberTextField, "growx, pushx, wrap");
-
-        JLabel surnameLabel = new JLabel("Last Name: ");
-        surnameTextField = new JTextField(15);
+        surnameTextField = new JTextField(nrOfColumns);
         surnameTextField.setEditable(true);
 
-        dataPanel.add(surnameLabel, "growx, pushx");
-        dataPanel.add(surnameTextField, "growx, pushx, wrap");
-
-        JLabel firstNameLabel = new JLabel("First Name: ");
-        firstNameTextField = new JTextField(15);
+        firstNameTextField = new JTextField(nrOfColumns);
         firstNameTextField.setEditable(true);
 
-        dataPanel.add(firstNameLabel, "growx, pushx");
-        dataPanel.add(firstNameTextField, "growx, pushx, wrap");
+        comboBox = new JComboBox<>(accounts);
 
-        JLabel accountTypeLabel = new JLabel("Account Type: ");
-        JTextField accountTypeTextField = new JTextField(5);
-        accountTypeTextField.setEditable(true);
-
-        dataPanel.add(accountTypeLabel, "growx, pushx");
-        dataPanel.add(comboBox, "growx, pushx, wrap");
-
-        JLabel balanceLabel = new JLabel("Balance: ");
-        balanceTextField = new JTextField(10);
+        balanceTextField = new JTextField(nrOfCurrencyColumns);
         balanceTextField.setText("0.0");
         balanceTextField.setEditable(false);
 
-        dataPanel.add(balanceLabel, "growx, pushx");
-        dataPanel.add(balanceTextField, "growx, pushx, wrap");
-
-        JLabel overdraftLabel = new JLabel("Overdraft: ");
-        overdraftTextField = new JTextField(10);
+        overdraftTextField = new JTextField(nrOfCurrencyColumns);
         overdraftTextField.setText("0.0");
         overdraftTextField.setEditable(false);
+    }
 
-        dataPanel.add(overdraftLabel, "growx, pushx");
-        dataPanel.add(overdraftTextField, "growx, pushx, wrap");
+    private JPanel setUpDataPanel() {
+        JPanel dataPanel = new JPanel(new MigLayout());
 
-        add(dataPanel, BorderLayout.CENTER);
+        addLabelAndTextField(dataPanel, "Account Number: ", accountNumberTextField);
+        addLabelAndTextField(dataPanel, "Last Name: ",surnameTextField);
+        addLabelAndTextField(dataPanel, "First Name: ", firstNameTextField);
+        addLabelAndTextField(dataPanel, "Account Type: ", comboBox);
+        addLabelAndTextField(dataPanel, "Balance: ", balanceTextField);
+        addLabelAndTextField(dataPanel, "Overdraft: ", overdraftTextField);
 
+        return dataPanel;
+    }
+
+    private void addLabelAndTextField(JPanel jPanel, String label, Component component){
+        final String labelConstraints = "growx, pushx";
+        final String textFieldConstraints = "growx, pushx, wrap";
+        jPanel.add(new JLabel(label), labelConstraints);
+        jPanel.add(component, textFieldConstraints);
+    }
+
+    private JPanel setUpButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
+
+        buttonPanel.add(setUpAddButton());
+        buttonPanel.add(setUpCancelButton());
+
+        return buttonPanel;
+    }
+
+    private JButton setUpAddButton() {
         JButton addButton = new JButton("Add");
-        JButton cancelButton = new JButton("Cancel");
-
-        buttonPanel.add(addButton);
-        buttonPanel.add(cancelButton);
-
-        add(buttonPanel, BorderLayout.SOUTH);
 
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String accountNumber = accountNumberTextField.getText();
-                String surname = surnameTextField.getText();
-                String firstName = firstNameTextField.getText();
-                String accountType = comboBox.getSelectedItem().toString();
-                String balanceStr = balanceTextField.getText();
-                String overdraftStr = overdraftTextField.getText();
-                double balance;
-                double overdraft;
-
-                if (accountNumber != null && accountNumber.length() == 8 && surname != null && firstName != null && accountType != null) {
+                if (isInputValid()) {
                     try {
-
-                        boolean idTaken = false;
                         boolean accNumTaken = false;
-
                         int randNumber = rand.nextInt(24) + 1;
 
                         for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-
                             while (randNumber == entry.getValue().getAccountID()) {
                                 randNumber = rand.nextInt(24) + 1;
                             }
@@ -149,15 +139,40 @@ public class CreateBankDialog extends JFrame {
                 dispose();
             }
         });
+        return addButton;
+    }
 
+    private JButton setUpCancelButton() {
+        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
         });
 
-        setSize(400, 800);
-        pack();
-        setVisible(true);
+        return cancelButton;
+    }
+
+    private void getValues() {
+        accountNumber = accountNumberTextField.getText();
+        surname = surnameTextField.getText();
+        firstName = firstNameTextField.getText();
+        accountType = comboBox.getSelectedItem().toString();
+    }
+
+    private boolean isInputValid() {
+        boolean valid = true;
+        getValues();
+
+        if (accountNumber == null || accountNumber.length() != 8)
+            valid = false;
+        if (surname == null)
+            valid = false;
+        if (firstName == null)
+            valid = false;
+        if (accountType == null)
+            valid = false;
+
+        return valid;
     }
 }
