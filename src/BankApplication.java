@@ -41,7 +41,7 @@ public class BankApplication extends JFrame {
     private int currentItem = 0;
     private boolean openValues;
 
-    private BankApplication() {
+    public BankApplication() {
         super("Bank Application");
         initComponents();
     }
@@ -505,7 +505,7 @@ public class BankApplication extends JFrame {
         });
     }
 
-    public void saveOpenValues() {
+    private void saveOpenValues() {
         if (openValues) {
             surnameTextField.setEditable(false);
             firstNameTextField.setEditable(false);
@@ -515,7 +515,7 @@ public class BankApplication extends JFrame {
         }
     }
 
-    public void displayDetails(int currentItem) {
+    private void displayDetails(int currentItem) {
         accountIDTextField.setText(table.get(currentItem).getAccountID() + "");
         accountNumberTextField.setText(table.get(currentItem).getAccountNumber());
         surnameTextField.setText(table.get(currentItem).getSurname());
@@ -674,12 +674,5 @@ public class BankApplication extends JFrame {
         openFileRead();
         readRecords();
         closeFile();
-    }
-
-    public static void main(String[] args) {
-        BankApplication ba = new BankApplication();
-        ba.setSize(1200, 400);
-        ba.pack();
-        ba.setVisible(true);
     }
 }
