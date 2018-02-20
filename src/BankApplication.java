@@ -31,11 +31,11 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 
 public class BankApplication extends JFrame {
-    private static HashMap<Integer, BankAccount> table = new HashMap<>();
-    private final static int TABLE_SIZE = 29;
+    private HashMap<Integer, BankAccount> table = new HashMap<>();
+    private final int TABLE_SIZE = 29;
 
     private JTextField accountIDTextField, accountNumberTextField, firstNameTextField, surnameTextField, accountTypeTextField, balanceTextField, overdraftTextField;
-    private static JFileChooser fc;
+    private JFileChooser fc;
     private JTable jTable;
     private double interestRate;
     private int currentItem = 0;
@@ -528,11 +528,10 @@ public class BankApplication extends JFrame {
             overdraftTextField.setText("Only applies to current accs");
     }
 
-    private static RandomAccessFile input;
-    private static RandomAccessFile output;
-    private static final int NUMBER_RECORDS = 100;
+    private RandomAccessFile input;
+    private RandomAccessFile output;
 
-    private static void openFileRead() {
+    private void openFileRead() {
         table.clear();
         fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(null);
@@ -551,9 +550,9 @@ public class BankApplication extends JFrame {
         } // end catch
     } // end method openFile
 
-    private static String fileToSaveAs = "";
+    private String fileToSaveAs = "";
 
-    private static void openFileWrite() {
+    private void openFileWrite() {
         if (fileToSaveAs.equalsIgnoreCase("")) {
             // open file
             try {
@@ -567,7 +566,7 @@ public class BankApplication extends JFrame {
             saveToFileAs();
     }
 
-    private static void saveToFileAs() {
+    private void saveToFileAs() {
         fc = new JFileChooser();
         int returnVal = fc.showSaveDialog(null);
 
@@ -590,7 +589,7 @@ public class BankApplication extends JFrame {
         }
     }
 
-    private static void closeFile() {
+    private void closeFile() {
         try // close file and exit
         {
             if (input != null)
@@ -601,7 +600,7 @@ public class BankApplication extends JFrame {
         } // end catch
     } // end method closeFile
 
-    private static void readRecords() {
+    private void readRecords() {
         RandomAccessBankAccount record = new RandomAccessBankAccount();
         // read a record and display
         try {
@@ -635,7 +634,7 @@ public class BankApplication extends JFrame {
         } // end catch
     }
 
-    private static void saveToFile() {
+    private void saveToFile() {
         RandomAccessBankAccount record = new RandomAccessBankAccount();
         Scanner input = new Scanner(System.in);
 
@@ -659,31 +658,22 @@ public class BankApplication extends JFrame {
         }
     }
 
-    private static void writeFile() {
+    private void writeFile() {
         openFileWrite();
         saveToFile();
         closeFile();
     }
 
-    private static void saveFileAs() {
+    private void saveFileAs() {
         saveToFileAs();
         saveToFile();
         closeFile();
     }
 
-    private static void readFile() {
+    private void readFile() {
         openFileRead();
         readRecords();
         closeFile();
-    }
-
-    public void put(int key, BankAccount value) {
-        int hash = (key % TABLE_SIZE);
-
-        while (table.containsKey(key)) {
-            hash = hash + 1;
-        }
-        table.put(hash, value);
     }
 
     public static void main(String[] args) {
