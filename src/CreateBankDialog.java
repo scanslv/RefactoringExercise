@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -14,13 +15,11 @@ public class CreateBankDialog extends JFrame {
     private DetailsFrame detailsFrame;
     private final static int TABLE_SIZE = 29;
     private Random rand = new Random();
-    private HashMap<Integer, BankAccount> table = new HashMap<>();
 
     private String accountNumber, surname, firstName, accountType;
 
-    CreateBankDialog(HashMap<Integer, BankAccount> accounts) {
+    CreateBankDialog() {
         super("Add Bank Details");
-        table = accounts;
         setLayout(new BorderLayout());
 
         detailsFrame = new DetailsFrame(false, true);
@@ -47,38 +46,24 @@ public class CreateBankDialog extends JFrame {
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (isInputValid()) {
-                    try {
-                        boolean accNumTaken = false;
-                        int randNumber = rand.nextInt(24) + 1;
+                    boolean accNumTaken = false;
 
-                        for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-                            while (randNumber == entry.getValue().getAccountID()) {
-                                randNumber = rand.nextInt(24) + 1;
-                            }
+                    for (BankAccount bankAccount : BankApplication.table) {
+                        if (bankAccount.getAccountNumber().equalsIgnoreCase(accountNumber.trim()))
+                            accNumTaken = true;
+                    }
+                    if (!accNumTaken) {
+                        int id = 1;
+                        if (!BankApplication.table.isEmpty()) {
+                            id = BankApplication.table.get(BankApplication.table.size() - 1).getAccountID() + 1;
                         }
-                        for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-                            if (entry.getValue().getAccountNumber().trim().equals(accountNumber)) {
-                                accNumTaken = true;
-                            }
-                        }
-                        if (!accNumTaken) {
-                            BankAccount account = new BankAccount(randNumber, accountNumber, surname, firstName, accountType, 0.0, 0.0);
-                            int key = Integer.parseInt(account.getAccountNumber());
-                            int hash = (key % TABLE_SIZE);
-
-                            while (table.containsKey(hash)) {
-                                hash = hash + 1;
-                            }
-                            table.put(hash, account);
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Account Number must be unique");
-                        }
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Number format exception");
+                        BankApplication.table.add(new BankAccount(id, accountNumber, surname, firstName, accountType, 0.0, 0.0));
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Account Number must be unique");
                     }
                 } else
                     JOptionPane.showMessageDialog(null, "Please make sure all fields have values, and Account Number is a unique 8 digit number");
-                dispose();
             }
         });
         return addButton;

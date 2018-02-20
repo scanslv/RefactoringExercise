@@ -11,13 +11,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -28,10 +26,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import net.miginfocom.swing.MigLayout;
-
 public class BankApplication extends JFrame {
-    private HashMap<Integer, BankAccount> table = new HashMap<>();
+    public static ArrayList<BankAccount> table = new ArrayList<>();
     private final int TABLE_SIZE = 29;
     private DetailsFrame detailsFrame;
 
@@ -40,6 +36,7 @@ public class BankApplication extends JFrame {
     private JTable jTable;
     private double interestRate;
     private int currentItem = 0;
+    private int previousItem = 0;
     private boolean openValues;
 
     public BankApplication() {
@@ -154,73 +151,43 @@ public class BankApplication extends JFrame {
 
         ActionListener first = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                saveOpenValues();
-                currentItem = 0;
-
-                while (!table.containsKey(currentItem)) {
-                    currentItem++;
+                if (!table.isEmpty()) {
+                    currentItem = 0;
+                    displayDetails();
                 }
-                displayDetails(currentItem);
             }
         };
 
         ActionListener next = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                ArrayList<Integer> keyList = new ArrayList<Integer>();
-                int i = 0;
-
-                while (i < TABLE_SIZE) {
-                    i++;
-                    if (table.containsKey(i))
-                        keyList.add(i);
-                }
-
-                int maxKey = Collections.max(keyList);
-                saveOpenValues();
-
-                if (currentItem < maxKey) {
-                    currentItem++;
-                    while (!table.containsKey(currentItem)) {
+                if (!table.isEmpty()) {
+                    if (currentItem < table.size() - 1)
                         currentItem++;
-                    }
+                    else
+                        currentItem = 0;
+                    displayDetails();
                 }
-                displayDetails(currentItem);
             }
         };
 
         ActionListener prev = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ArrayList<Integer> keyList = new ArrayList<Integer>();
-                int i = 0;
-
-                while (i < TABLE_SIZE) {
-                    i++;
-                    if (table.containsKey(i))
-                        keyList.add(i);
-                }
-
-                int minKey = Collections.min(keyList);
-
-                if (currentItem > minKey) {
-                    currentItem--;
-                    while (!table.containsKey(currentItem)) {
+                if (!table.isEmpty()) {
+                    if (currentItem != 0) {
                         currentItem--;
-                    }
+                    } else
+                        currentItem = 0;
+                    displayDetails();
                 }
-                displayDetails(currentItem);
             }
         };
 
         ActionListener last = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                saveOpenValues();
-                currentItem = 29;
-
-                while (!table.containsKey(currentItem)) {
-                    currentItem--;
+                if (!table.isEmpty()) {
+                    currentItem = table.size() - 1;
+                    displayDetails();
                 }
-                displayDetails(currentItem);
             }
         };
 
@@ -238,21 +205,31 @@ public class BankApplication extends JFrame {
 
         deleteItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                table.remove(currentItem);
-                JOptionPane.showMessageDialog(null, "Account Deleted");
-
-                currentItem = 0;
-                while (!table.containsKey(currentItem)) {
-                    currentItem++;
+                openValues = false;
+                if (!table.isEmpty()) {
+                    table.remove(currentItem);
+                    JOptionPane.showMessageDialog(null, "Account Deleted");
+                    if (!table.isEmpty()) {
+                        if (table.size() == 1) {
+                            currentItem = 0;
+                            displayDetails();
+                        } else if (currentItem == 0) {
+                            displayDetails();
+                        } else {
+                            currentItem--;
+                            displayDetails();
+                        }
+                    } else {
+                        currentItem = 0;
+//                        clearTextFields();
+                    }
                 }
-                displayDetails(currentItem);
-
             }
         });
 
         createItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new CreateBankDialog(table);
+                new CreateBankDialog();
             }
         });
 
@@ -289,11 +266,11 @@ public class BankApplication extends JFrame {
                 JScrollPane scrollPane = new JScrollPane(jTable);
                 jTable.setAutoCreateRowSorter(true);
 
-                for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-                    Object[] objs = {entry.getValue().getAccountID(), entry.getValue().getAccountNumber(),
-                            entry.getValue().getFirstName().trim() + " " + entry.getValue().getSurname().trim(),
-                            entry.getValue().getAccountType(), entry.getValue().getBalance(),
-                            entry.getValue().getOverdraft()};
+                for (BankAccount bankAccount : table) {
+                    Object[] objs = {bankAccount.getAccountID(), bankAccount.getAccountNumber(),
+                            bankAccount.getFirstName().trim() + " " + bankAccount.getSurname().trim(),
+                            bankAccount.getAccountType(), bankAccount.getBalance(),
+                            bankAccount.getOverdraft()};
 
                     tableModel.addRow(objs);
                 }
@@ -307,10 +284,7 @@ public class BankApplication extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 readFile();
                 currentItem = 0;
-                while (!table.containsKey(currentItem)) {
-                    currentItem++;
-                }
-                displayDetails(currentItem);
+                displayDetails();
             }
         });
 
@@ -335,8 +309,6 @@ public class BankApplication extends JFrame {
                     dispose();
                 } else if (answer == JOptionPane.NO_OPTION)
                     dispose();
-                else if (answer == 0)
-                    ;
             }
         });
 
@@ -346,17 +318,17 @@ public class BankApplication extends JFrame {
                 String sName = JOptionPane.showInputDialog("Search for surname: ");
                 boolean found = false;
 
-                for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
+                for (BankAccount bankAccount : table) {
 
-                    if (sName.equalsIgnoreCase((entry.getValue().getSurname().trim()))) {
+                    if (sName.equalsIgnoreCase((bankAccount.getSurname().trim()))) {
                         found = true;
-                        accountIDTextField.setText(entry.getValue().getAccountID() + "");
-                        accountNumberTextField.setText(entry.getValue().getAccountNumber());
-                        surnameTextField.setText(entry.getValue().getSurname());
-                        firstNameTextField.setText(entry.getValue().getFirstName());
-                        accountTypeTextField.setText(entry.getValue().getAccountType());
-                        balanceTextField.setText(entry.getValue().getBalance() + "");
-                        overdraftTextField.setText(entry.getValue().getOverdraft() + "");
+                        accountIDTextField.setText(bankAccount.getAccountID() + "");
+                        accountNumberTextField.setText(bankAccount.getAccountNumber());
+                        surnameTextField.setText(bankAccount.getSurname());
+                        firstNameTextField.setText(bankAccount.getFirstName());
+                        accountTypeTextField.setText(bankAccount.getAccountType());
+                        balanceTextField.setText(bankAccount.getBalance() + "");
+                        overdraftTextField.setText(bankAccount.getOverdraft() + "");
                     }
                 }
                 if (found)
@@ -372,17 +344,17 @@ public class BankApplication extends JFrame {
                 String accNum = JOptionPane.showInputDialog("Search for account number: ");
                 boolean found = false;
 
-                for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
+                for (BankAccount bankAccount : table) {
 
-                    if (accNum.equals(entry.getValue().getAccountNumber().trim())) {
+                    if (accNum.equals(bankAccount.getAccountNumber().trim())) {
                         found = true;
-                        accountIDTextField.setText(entry.getValue().getAccountID() + "");
-                        accountNumberTextField.setText(entry.getValue().getAccountNumber());
-                        surnameTextField.setText(entry.getValue().getSurname());
-                        firstNameTextField.setText(entry.getValue().getFirstName());
-                        accountTypeTextField.setText(entry.getValue().getAccountType());
-                        balanceTextField.setText(entry.getValue().getBalance() + "");
-                        overdraftTextField.setText(entry.getValue().getOverdraft() + "");
+                        accountIDTextField.setText(bankAccount.getAccountID() + "");
+                        accountNumberTextField.setText(bankAccount.getAccountNumber());
+                        surnameTextField.setText(bankAccount.getSurname());
+                        firstNameTextField.setText(bankAccount.getFirstName());
+                        accountTypeTextField.setText(bankAccount.getAccountType());
+                        balanceTextField.setText(bankAccount.getBalance() + "");
+                        overdraftTextField.setText(bankAccount.getOverdraft() + "");
 
                     }
                 }
@@ -399,13 +371,13 @@ public class BankApplication extends JFrame {
                 String accNum = JOptionPane.showInputDialog("Account number to deposit into: ");
                 boolean found = false;
 
-                for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-                    if (accNum.equals(entry.getValue().getAccountNumber().trim())) {
+                for (BankAccount bankAccount : table) {
+                    if (accNum.equals(bankAccount.getAccountNumber().trim())) {
                         found = true;
                         String toDeposit = JOptionPane.showInputDialog("Account found, Enter Amount to Deposit: ");
-                        entry.getValue().setBalance(entry.getValue().getBalance() + Double.parseDouble(toDeposit));
-                        displayDetails(entry.getKey());
-                        //balanceTextField.setText(entry.getValue().getBalance()+"");
+                        bankAccount.setBalance(bankAccount.getBalance() + Double.parseDouble(toDeposit));
+                        currentItem = table.indexOf(bankAccount);
+                        displayDetails();
                     }
                 }
                 if (!found)
@@ -419,23 +391,20 @@ public class BankApplication extends JFrame {
                 String toWithdraw = JOptionPane.showInputDialog("Account found, Enter Amount to Withdraw: ");
                 boolean found;
 
-                for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-
-                    if (accNum.equals(entry.getValue().getAccountNumber().trim())) {
-
-                        found = true;
-
-                        if (entry.getValue().getAccountType().trim().equals("Current")) {
-                            if (Double.parseDouble(toWithdraw) > entry.getValue().getBalance() + entry.getValue().getOverdraft())
+                for (BankAccount bankAccount : table) {
+                    if (accNum.equals(bankAccount.getAccountNumber().trim())) {
+                        currentItem = table.indexOf(bankAccount);
+                        if (bankAccount.getAccountType().trim().equals("Current")) {
+                            if (Double.parseDouble(toWithdraw) > bankAccount.getBalance() + bankAccount.getOverdraft())
                                 JOptionPane.showMessageDialog(null, "Transaction exceeds overdraft limit");
                             else {
-                                entry.getValue().setBalance(entry.getValue().getBalance() - Double.parseDouble(toWithdraw));
-                                displayDetails(entry.getKey());
+                                bankAccount.setBalance(bankAccount.getBalance() - Double.parseDouble(toWithdraw));
+                                displayDetails();
                             }
-                        } else if (entry.getValue().getAccountType().trim().equals("Deposit")) {
-                            if (Double.parseDouble(toWithdraw) <= entry.getValue().getBalance()) {
-                                entry.getValue().setBalance(entry.getValue().getBalance() - Double.parseDouble(toWithdraw));
-                                displayDetails(entry.getKey());
+                        } else if (bankAccount.getAccountType().trim().equals("Deposit")) {
+                            if (Double.parseDouble(toWithdraw) <= bankAccount.getBalance()) {
+                                bankAccount.setBalance(bankAccount.getBalance() - Double.parseDouble(toWithdraw));
+                                displayDetails();
                             } else
                                 JOptionPane.showMessageDialog(null, "Insufficient funds.");
                         }
@@ -446,19 +415,19 @@ public class BankApplication extends JFrame {
 
         calcInterest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-                    if (entry.getValue().getAccountType().equals("Deposit")) {
+                for (BankAccount bankAccount : table) {
+                    if (bankAccount.getAccountType().equals("Deposit")) {
                         double equation = 1 + ((interestRate) / 100);
-                        entry.getValue().setBalance(entry.getValue().getBalance() * equation);
-                        JOptionPane.showMessageDialog(null, "Balances Updated");
-                        displayDetails(entry.getKey());
+                        bankAccount.setBalance(bankAccount.getBalance() * equation);
                     }
                 }
+                displayDetails();
+                JOptionPane.showMessageDialog(null, "Balances Updated");
             }
         });
     }
 
-    private void setUpTextFields(){
+    private void setUpTextFields() {
         accountIDTextField = detailsFrame.getAccountIdTextField();
         accountNumberTextField = detailsFrame.getAccountNumberTextField();
         firstNameTextField = detailsFrame.getFirstNameTextField();
@@ -480,12 +449,14 @@ public class BankApplication extends JFrame {
             surnameTextField.setEditable(false);
             firstNameTextField.setEditable(false);
 
-            table.get(currentItem).setSurname(surnameTextField.getText());
-            table.get(currentItem).setFirstName(firstNameTextField.getText());
+            table.get(previousItem).setSurname(surnameTextField.getText());
+            table.get(previousItem).setFirstName(firstNameTextField.getText());
         }
+        previousItem = currentItem;
     }
 
-    private void displayDetails(int currentItem) {
+    private void displayDetails() {
+        saveOpenValues();
         accountIDTextField.setText(table.get(currentItem).getAccountID() + "");
         accountNumberTextField.setText(table.get(currentItem).getAccountNumber());
         surnameTextField.setText(table.get(currentItem).getSurname());
@@ -575,23 +546,12 @@ public class BankApplication extends JFrame {
         // read a record and display
         try {
             while (true) {
-                do {
-                    if (input != null)
-                        record.read(input);
-                } while (record.getAccountID() == 0);
+                record.read(input);
 
-                BankAccount ba = new BankAccount(record.getAccountID(), record.getAccountNumber(), record.getFirstName(),
+                BankAccount bankAccount = new BankAccount(record.getAccountID(), record.getAccountNumber(), record.getFirstName(),
                         record.getSurname(), record.getAccountType(), record.getBalance(), record.getOverdraft());
 
-                Integer key = Integer.valueOf(ba.getAccountNumber().trim());
-                int hash = (key % TABLE_SIZE);
-
-                while (table.containsKey(hash)) {
-
-                    hash = hash + 1;
-                }
-
-                table.put(hash, ba);
+                table.add(bankAccount);
             } // end while
         } // end try
         catch (EOFException eofException) // close file
@@ -606,19 +566,17 @@ public class BankApplication extends JFrame {
 
     private void saveToFile() {
         RandomAccessBankAccount record = new RandomAccessBankAccount();
-        Scanner input = new Scanner(System.in);
 
-        for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-            record.setAccountID(entry.getValue().getAccountID());
-            record.setAccountNumber(entry.getValue().getAccountNumber());
-            record.setFirstName(entry.getValue().getFirstName());
-            record.setSurname(entry.getValue().getSurname());
-            record.setAccountType(entry.getValue().getAccountType());
-            record.setBalance(entry.getValue().getBalance());
-            record.setOverdraft(entry.getValue().getOverdraft());
+        for (BankAccount bankAccount : table) {
+            record.setAccountID(bankAccount.getAccountID());
+            record.setAccountNumber(bankAccount.getAccountNumber());
+            record.setFirstName(bankAccount.getFirstName());
+            record.setSurname(bankAccount.getSurname());
+            record.setAccountType(bankAccount.getAccountType());
+            record.setBalance(bankAccount.getBalance());
+            record.setOverdraft(bankAccount.getOverdraft());
 
             if (output != null) {
-
                 try {
                     record.write(output);
                 } catch (IOException u) {
