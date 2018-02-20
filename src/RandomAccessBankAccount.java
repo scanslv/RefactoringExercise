@@ -2,13 +2,12 @@ import java.io.RandomAccessFile;
 import java.io.IOException;
 
 public class RandomAccessBankAccount extends BankAccount {
-	public static final int SIZE = 140;
 	
-	public RandomAccessBankAccount(){
+	RandomAccessBankAccount(){
 		this(0, "", "", "", "", 0.0, 0.0);
 	}
 	
-	public RandomAccessBankAccount(int accountID, String accountNumber, String firstName, String surname, String accountType,
+	private RandomAccessBankAccount(int accountID, String accountNumber, String firstName, String surname, String accountType,
 			double balance, double overdraft){
 		super(accountID, accountNumber, firstName, surname, accountType, balance, overdraft);
 	}
