@@ -33,6 +33,7 @@ import net.miginfocom.swing.MigLayout;
 public class BankApplication extends JFrame {
     private HashMap<Integer, BankAccount> table = new HashMap<>();
     private final int TABLE_SIZE = 29;
+    private DetailsFrame detailsFrame;
 
     private JTextField accountIDTextField, accountNumberTextField, firstNameTextField, surnameTextField, accountTypeTextField, balanceTextField, overdraftTextField;
     private JFileChooser fc;
@@ -48,58 +49,10 @@ public class BankApplication extends JFrame {
 
     private void initComponents() {
         setLayout(new BorderLayout());
-        JPanel displayPanel = new JPanel(new MigLayout());
+        detailsFrame = new DetailsFrame(true, false);
 
-        JLabel accountIDLabel = new JLabel("Account ID: ");
-        accountIDTextField = new JTextField(15);
-        accountIDTextField.setEditable(false);
-
-        displayPanel.add(accountIDLabel, "growx, pushx");
-        displayPanel.add(accountIDTextField, "growx, pushx, wrap");
-
-        JLabel accountNumberLabel = new JLabel("Account Number: ");
-        accountNumberTextField = new JTextField(15);
-        accountNumberTextField.setEditable(false);
-
-        displayPanel.add(accountNumberLabel, "growx, pushx");
-        displayPanel.add(accountNumberTextField, "growx, pushx, wrap");
-
-        JLabel surnameLabel = new JLabel("Last Name: ");
-        surnameTextField = new JTextField(15);
-        surnameTextField.setEditable(false);
-
-        displayPanel.add(surnameLabel, "growx, pushx");
-        displayPanel.add(surnameTextField, "growx, pushx, wrap");
-
-        JLabel firstNameLabel = new JLabel("First Name: ");
-        firstNameTextField = new JTextField(15);
-        firstNameTextField.setEditable(false);
-
-        displayPanel.add(firstNameLabel, "growx, pushx");
-        displayPanel.add(firstNameTextField, "growx, pushx, wrap");
-
-        JLabel accountTypeLabel = new JLabel("Account Type: ");
-        accountTypeTextField = new JTextField(5);
-        accountTypeTextField.setEditable(false);
-
-        displayPanel.add(accountTypeLabel, "growx, pushx");
-        displayPanel.add(accountTypeTextField, "growx, pushx, wrap");
-
-        JLabel balanceLabel = new JLabel("Balance: ");
-        balanceTextField = new JTextField(10);
-        balanceTextField.setEditable(false);
-
-        displayPanel.add(balanceLabel, "growx, pushx");
-        displayPanel.add(balanceTextField, "growx, pushx, wrap");
-
-        JLabel overdraftLabel = new JLabel("Overdraft: ");
-        overdraftTextField = new JTextField(10);
-        overdraftTextField.setEditable(false);
-
-        displayPanel.add(overdraftLabel, "growx, pushx");
-        displayPanel.add(overdraftTextField, "growx, pushx, wrap");
-
-        add(displayPanel, BorderLayout.CENTER);
+        add(detailsFrame.buildPanel(), BorderLayout.CENTER);
+        setUpTextFields();
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
 
@@ -503,6 +456,23 @@ public class BankApplication extends JFrame {
                 }
             }
         });
+    }
+
+    private void setUpTextFields(){
+        accountIDTextField = detailsFrame.getAccountIdTextField();
+        accountNumberTextField = detailsFrame.getAccountNumberTextField();
+        firstNameTextField = detailsFrame.getFirstNameTextField();
+        surnameTextField = detailsFrame.getSurnameTextField();
+        accountTypeTextField = detailsFrame.getAccountTypeTextField();
+        balanceTextField = detailsFrame.getBalanceTextField();
+        overdraftTextField = detailsFrame.getOverdraftTextField();
+
+        accountNumberTextField.setEditable(false);
+        surnameTextField.setEditable(false);
+        firstNameTextField.setEditable(false);
+        accountTypeTextField.setEditable(false);
+        balanceTextField.setText("");
+        overdraftTextField.setText("");
     }
 
     private void saveOpenValues() {

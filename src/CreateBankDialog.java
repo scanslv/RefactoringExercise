@@ -6,88 +6,30 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import net.miginfocom.swing.MigLayout;
 
 public class CreateBankDialog extends JFrame {
+    private DetailsFrame detailsFrame;
     private final static int TABLE_SIZE = 29;
-    private final String[] accounts = new String[]{"Current", "Deposit"};
     private Random rand = new Random();
     private HashMap<Integer, BankAccount> table = new HashMap<>();
 
-    private JTextField accountNumberTextField;
-    private JTextField firstNameTextField;
-    private JTextField surnameTextField;
-    private JTextField balanceTextField, overdraftTextField;
-    private JComboBox comboBox;
-
-    private String accountNumber;
-    private String surname;
-    private String firstName;
-    private String accountType;
+    private String accountNumber, surname, firstName, accountType;
 
     CreateBankDialog(HashMap<Integer, BankAccount> accounts) {
         super("Add Bank Details");
         table = accounts;
         setLayout(new BorderLayout());
 
-        setUpTextFields();
-        add(setUpDataPanel(), BorderLayout.CENTER);
+        detailsFrame = new DetailsFrame(false, true);
+        add(detailsFrame.buildPanel(), BorderLayout.CENTER);
         add(setUpButtonPanel(), BorderLayout.SOUTH);
 
         setSize(400, 800);
         pack();
         setVisible(true);
-    }
-
-    private void setUpTextFields(){
-        final int nrOfColumns = 15;
-        final int nrOfCurrencyColumns = 10;
-
-        accountNumberTextField = new JTextField(nrOfColumns);
-        accountNumberTextField.setEditable(true);
-
-        surnameTextField = new JTextField(nrOfColumns);
-        surnameTextField.setEditable(true);
-
-        firstNameTextField = new JTextField(nrOfColumns);
-        firstNameTextField.setEditable(true);
-
-        comboBox = new JComboBox<>(accounts);
-
-        balanceTextField = new JTextField(nrOfCurrencyColumns);
-        balanceTextField.setText("0.0");
-        balanceTextField.setEditable(false);
-
-        overdraftTextField = new JTextField(nrOfCurrencyColumns);
-        overdraftTextField.setText("0.0");
-        overdraftTextField.setEditable(false);
-    }
-
-    private JPanel setUpDataPanel() {
-        JPanel dataPanel = new JPanel(new MigLayout());
-
-        addLabelAndTextField(dataPanel, "Account Number: ", accountNumberTextField);
-        addLabelAndTextField(dataPanel, "Last Name: ",surnameTextField);
-        addLabelAndTextField(dataPanel, "First Name: ", firstNameTextField);
-        addLabelAndTextField(dataPanel, "Account Type: ", comboBox);
-        addLabelAndTextField(dataPanel, "Balance: ", balanceTextField);
-        addLabelAndTextField(dataPanel, "Overdraft: ", overdraftTextField);
-
-        return dataPanel;
-    }
-
-    private void addLabelAndTextField(JPanel jPanel, String label, Component component){
-        final String labelConstraints = "growx, pushx";
-        final String textFieldConstraints = "growx, pushx, wrap";
-        jPanel.add(new JLabel(label), labelConstraints);
-        jPanel.add(component, textFieldConstraints);
     }
 
     private JPanel setUpButtonPanel() {
@@ -115,7 +57,7 @@ public class CreateBankDialog extends JFrame {
                             }
                         }
                         for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-                            if (entry.getValue().getAccountNumber().trim().equals(accountNumberTextField.getText())) {
+                            if (entry.getValue().getAccountNumber().trim().equals(accountNumber)) {
                                 accNumTaken = true;
                             }
                         }
@@ -153,13 +95,6 @@ public class CreateBankDialog extends JFrame {
         return cancelButton;
     }
 
-    private void getValues() {
-        accountNumber = accountNumberTextField.getText();
-        surname = surnameTextField.getText();
-        firstName = firstNameTextField.getText();
-        accountType = comboBox.getSelectedItem().toString();
-    }
-
     private boolean isInputValid() {
         boolean valid = true;
         getValues();
@@ -174,5 +109,12 @@ public class CreateBankDialog extends JFrame {
             valid = false;
 
         return valid;
+    }
+
+    private void getValues() {
+        accountNumber = detailsFrame.getAccountNumberTextField().getText();
+        surname = detailsFrame.getSurnameTextField().getText();
+        firstName = detailsFrame.getFirstNameTextField().getText();
+        accountType = detailsFrame.getComboBox().getSelectedItem().toString();
     }
 }
