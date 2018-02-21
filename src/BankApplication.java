@@ -9,7 +9,6 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
 public class BankApplication extends JFrame implements ActionListener {
     ArrayList<BankAccount> table = new ArrayList<>();
@@ -18,7 +17,7 @@ public class BankApplication extends JFrame implements ActionListener {
     private JTextField accountIDTextField, accountNumberTextField, firstNameTextField, surnameTextField, accountTypeTextField, balanceTextField, overdraftTextField;
     private JFileChooser fc;
     private double interestRate;
-    private int currentItem = 0;
+    int currentItem = 0;
     private int previousItem = 0;
     private boolean openValues = false;
     private RandomAccessFile input;
@@ -194,7 +193,7 @@ public class BankApplication extends JFrame implements ActionListener {
         previousItem = currentItem;
     }
 
-    private void displayDetails() {
+    void displayDetails() {
         saveOpenValues();
         accountIDTextField.setText(table.get(currentItem).getAccountID() + "");
         accountNumberTextField.setText(table.get(currentItem).getAccountNumber());
@@ -477,32 +476,7 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
             case Constants.WITHDRAW: {
-                String accNum = JOptionPane.showInputDialog(Constants.ACCOUNT_TO_WITHDRAW);
-                String toWithdraw = JOptionPane.showInputDialog(Constants.AMMOUNT_TO_WITHDRAW);
-                boolean found = false;
-
-                for (BankAccount bankAccount : table) {
-                    if (accNum.equals(bankAccount.getAccountNumber().trim())) {
-                        found = true;
-                        currentItem = table.indexOf(bankAccount);
-                        if (bankAccount.getAccountType().trim().equals(Constants.CURRENT)) {
-                            if (Double.parseDouble(toWithdraw) > bankAccount.getBalance() + bankAccount.getOverdraft())
-                                JOptionPane.showMessageDialog(null, Constants.TRANSACTION_EXCEEDS);
-                            else {
-                                bankAccount.setBalance(bankAccount.getBalance() - Double.parseDouble(toWithdraw));
-                                displayDetails();
-                            }
-                        } else if (bankAccount.getAccountType().trim().equals(Constants.DEPOSIT)) {
-                            if (Double.parseDouble(toWithdraw) <= bankAccount.getBalance()) {
-                                bankAccount.setBalance(bankAccount.getBalance() - Double.parseDouble(toWithdraw));
-                                displayDetails();
-                            } else
-                                JOptionPane.showMessageDialog(null, Constants.INSUFFICIENT_FUNDS);
-                        }
-                    }
-                }
-                if (!found)
-                    JOptionPane.showMessageDialog(null, Constants.ACCOUNT_NR + accNum + Constants.NOT_FOUND);
+                new WithdrawOptionPane(this);
                 break;
             }
             case Constants.CALCULATE_INTEREST: {
