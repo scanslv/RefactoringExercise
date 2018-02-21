@@ -69,4 +69,8 @@ class Constants {
     static final String VALIDATION_TEXT = "Please make sure all fields have values, and Account Number is a unique 8 digit number";
     static final String SEARCH_FOR_SURNAME = "Search for surname: ";
     static final String SEARCH_FOR_ACC_NR = "Search for account number: ";
+    static final String ACCOUNT_DELETED = "Account Deleted";
+    static final String NEW_OVERDRAFT = "Enter new Overdraft";
+    static final String OVERDRAFT_MSG = "Overdraft only applies to Current Accounts";
+    static final String CLOSE_MSG = "Do you want to save before quitting?";
 }
