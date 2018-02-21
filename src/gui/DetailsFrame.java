@@ -1,3 +1,6 @@
+package gui;
+
+import constants.Constants;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

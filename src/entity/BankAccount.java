@@ -1,3 +1,5 @@
+package entity;
+
 public class BankAccount {
 
     private int accountID;
@@ -8,7 +10,7 @@ public class BankAccount {
     private double balance;
     private double overdraft;
 
-    BankAccount(int accountID, String accountNumber, String surname, String firstName, String accountType, double balance, double overdraft) {
+    public BankAccount(int accountID, String accountNumber, String surname, String firstName, String accountType, double balance, double overdraft) {
         this.accountID = accountID;
         this.accountNumber = accountNumber;
         this.surname = surname;

@@ -1,3 +1,7 @@
+package util;
+
+import entity.BankAccount;
+
 import java.io.RandomAccessFile;
 import java.io.IOException;
 

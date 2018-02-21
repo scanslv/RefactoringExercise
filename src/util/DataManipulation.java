@@ -1,30 +1,36 @@
+package util;
+
+import constants.Constants;
+import entity.BankAccount;
+import gui.BankApplication;
+
 import javax.swing.*;
 import java.io.*;
 
-class DataManipulation {
+public class DataManipulation {
     private BankApplication parent;
     private JFileChooser fc;
     private RandomAccessFile input;
     private RandomAccessFile output;
     private String fileToSaveAs = "";
 
-    DataManipulation(BankApplication parent) {
+    public DataManipulation(BankApplication parent) {
         this.parent = parent;
     }
 
-    void writeFile() {
+    public void writeFile() {
         openFileWrite();
         saveToFile();
         closeFile();
     }
 
-    void saveFileAs() {
+    public void saveFileAs() {
         saveToFileAs();
         saveToFile();
         closeFile();
     }
 
-    void readFile() {
+    public void readFile() {
         openFileRead();
         readRecords();
         closeFile();
