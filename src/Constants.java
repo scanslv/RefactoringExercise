@@ -5,7 +5,7 @@ class Constants {
 
     static final String ACCOUNT_ID = "Account ID: ";
     static final String ACCOUNT_NUMBER = "Account Number:";
-    static final String  LAST_NAME= "Last Name: ";
+    static final String LAST_NAME = "Last Name: ";
     static final String FIRST_NAME = "First Name: ";
     static final String ACCOUNT_TYPE = "Account Type: ";
     static final String FULL_NAME = "Full Name: ";
@@ -59,10 +59,14 @@ class Constants {
     static final String ACCOUNT_TO_WITHDRAW = "Account number to withdraw from: ";
     static final String AMOUNT_TO_WITHDRAW = "Account found, Enter Amount to Withdraw: ";
     static final String ACCOUNT_NR = "Account number ";
+    static final String SURNAME = "Surname ";
+    static final String FOUND = " found.";
     static final String NOT_FOUND = " not found.";
     static final String TRANSACTION_EXCEEDS = "Transaction exceeds overdraft limit";
     static final String INSUFFICIENT_FUNDS = "Insufficient funds.";
     static final String BALLANCE_UPDATED = "Balances Updated";
     static final String UNIQUE_NUMBER = "Account Number must be unique";
     static final String VALIDATION_TEXT = "Please make sure all fields have values, and Account Number is a unique 8 digit number";
+    static final String SEARCH_FOR_SURNAME = "Search for surname: ";
+    static final String SEARCH_FOR_ACC_NR = "Search for account number: ";
 }

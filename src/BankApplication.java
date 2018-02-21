@@ -373,40 +373,11 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
             case Constants.BY_ACCOUNT_NR: {
-                String accNum = JOptionPane.showInputDialog("Search for account number: ");
-                boolean found = false;
-
-                for (BankAccount bankAccount : table) {
-                    if (accNum.equals(bankAccount.getAccountNumber().trim())) {
-                        found = true;
-                        currentItem = table.indexOf(bankAccount);
-                        displayDetails();
-
-                    }
-                }
-                if (found)
-                    JOptionPane.showMessageDialog(null, "Account number " + accNum + " found.");
-                else
-                    JOptionPane.showMessageDialog(null, "Account number " + accNum + " not found.");
-
+                new SearchByOptionPane(this, Constants.BY_ACCOUNT_NR);
                 break;
             }
             case Constants.BY_SURNAME: {
-                String sName = JOptionPane.showInputDialog("Search for surname: ");
-                boolean found = false;
-
-                for (BankAccount bankAccount : table) {
-
-                    if (sName.equalsIgnoreCase((bankAccount.getSurname().trim()))) {
-                        found = true;
-                        currentItem = table.indexOf(bankAccount);
-                        displayDetails();
-                    }
-                }
-                if (found)
-                    JOptionPane.showMessageDialog(null, "Surname  " + sName + " found.");
-                else
-                    JOptionPane.showMessageDialog(null, "Surname " + sName + " not found.");
+                new SearchByOptionPane(this, Constants.BY_SURNAME);
                 break;
             }
             case Constants.LIST_ALL: {
@@ -414,7 +385,7 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
             case Constants.SET_OVERDRAFT: {
-                if (table.get(currentItem).getAccountType().trim().equals("Current")) {
+                if (table.get(currentItem).getAccountType().trim().equals(Constants.CURRENT)) {
                     String newOverdraftStr = JOptionPane.showInputDialog(null, "Enter new Overdraft", JOptionPane.OK_CANCEL_OPTION);
                     overdraftTextField.setText(newOverdraftStr);
                     table.get(currentItem).setOverdraft(Double.parseDouble(newOverdraftStr));
