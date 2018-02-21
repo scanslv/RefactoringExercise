@@ -3,7 +3,7 @@ import javax.swing.*;
 public class WithdrawOptionPane {
     public WithdrawOptionPane(BankApplication parent) {
         String accNum = JOptionPane.showInputDialog(Constants.ACCOUNT_TO_WITHDRAW);
-        String toWithdraw = JOptionPane.showInputDialog(Constants.AMMOUNT_TO_WITHDRAW);
+        String toWithdraw = JOptionPane.showInputDialog(Constants.AMOUNT_TO_WITHDRAW);
         boolean found = false;
 
         for (BankAccount bankAccount : parent.table) {

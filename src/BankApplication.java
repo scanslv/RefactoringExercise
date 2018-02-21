@@ -459,20 +459,7 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
             case Constants.DEPOSIT: {
-                String accNum = JOptionPane.showInputDialog(Constants.ACCOUNT_TO_DEPOSIT);
-                boolean found = false;
-
-                for (BankAccount bankAccount : table) {
-                    if (accNum.equals(bankAccount.getAccountNumber().trim())) {
-                        found = true;
-                        String toDeposit = JOptionPane.showInputDialog(Constants.AMMOUNT_TO_DEPOSIT);
-                        bankAccount.setBalance(bankAccount.getBalance() + Double.parseDouble(toDeposit));
-                        currentItem = table.indexOf(bankAccount);
-                        displayDetails();
-                    }
-                }
-                if (!found)
-                    JOptionPane.showMessageDialog(null, Constants.ACCOUNT_NR + accNum + Constants.NOT_FOUND);
+                new DepositOptionPane(this);
                 break;
             }
             case Constants.WITHDRAW: {

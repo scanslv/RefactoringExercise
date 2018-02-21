@@ -55,9 +55,9 @@ class Constants {
     static final String ERROR_READING = "Error reading file.";
     static final String ENTER_INTEREST = "Enter Interest Rate: (do not type the % sign)";
     static final String ACCOUNT_TO_DEPOSIT = "Account number to deposit into: ";
-    static final String AMMOUNT_TO_DEPOSIT = "Account found, Enter Amount to Deposit: ";
+    static final String AMOUNT_TO_DEPOSIT = "Account found, Enter Amount to Deposit: ";
     static final String ACCOUNT_TO_WITHDRAW = "Account number to withdraw from: ";
-    static final String AMMOUNT_TO_WITHDRAW = "Account found, Enter Amount to Withdraw: ";
+    static final String AMOUNT_TO_WITHDRAW = "Account found, Enter Amount to Withdraw: ";
     static final String ACCOUNT_NR = "Account number ";
     static final String NOT_FOUND = " not found.";
     static final String TRANSACTION_EXCEEDS = "Transaction exceeds overdraft limit";
