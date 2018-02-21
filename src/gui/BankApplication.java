@@ -1,3 +1,12 @@
+package gui;
+
+import constants.Constants;
+import entity.BankAccount;
+import optionPane.DepositOptionPane;
+import optionPane.SearchByOptionPane;
+import optionPane.WithdrawOptionPane;
+import util.DataManipulation;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,8 +15,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class BankApplication extends JFrame implements ActionListener {
-    ArrayList<BankAccount> table = new ArrayList<>();
-    int currentItem;
+    public ArrayList<BankAccount> table = new ArrayList<>();
+    public int currentItem;
     private DataManipulation fileManipulation;
     private DetailsFrame detailsFrame;
 
@@ -16,7 +25,7 @@ public class BankApplication extends JFrame implements ActionListener {
     private int previousItem = 0;
     private boolean openValues = false;
 
-    BankApplication() {
+    public BankApplication() {
         super(Constants.TITLE);
         detailsFrame = new DetailsFrame(true, false);
         initComponents();
@@ -141,13 +150,13 @@ public class BankApplication extends JFrame implements ActionListener {
     private JPanel setUpNavigationButtons() {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
 
-        JButton nextItemButton = new JButton(new ImageIcon("next.png"));
+        JButton nextItemButton = new JButton(new ImageIcon(Constants.NEXT_IMG_PATH));
         nextItemButton.setActionCommand(Constants.NEXT_ITEM);
-        JButton prevItemButton = new JButton(new ImageIcon("prev.png"));
+        JButton prevItemButton = new JButton(new ImageIcon(Constants.PREV_IMG_PATH));
         prevItemButton.setActionCommand(Constants.PREV_ITEM);
-        JButton firstItemButton = new JButton(new ImageIcon("first.png"));
+        JButton firstItemButton = new JButton(new ImageIcon(Constants.FIRST_IMG_PATH));
         firstItemButton.setActionCommand(Constants.FIRST_ITEM);
-        JButton lastItemButton = new JButton(new ImageIcon("last.png"));
+        JButton lastItemButton = new JButton(new ImageIcon(Constants.LAST_IMG_PATH));
         lastItemButton.setActionCommand(Constants.LAST_ITEM);
 
         buttonPanel.add(firstItemButton);
@@ -186,7 +195,7 @@ public class BankApplication extends JFrame implements ActionListener {
         previousItem = currentItem;
     }
 
-    void displayDetails() {
+    public void displayDetails() {
         saveOpenValues();
         accountIDTextField.setText(String.valueOf(table.get(currentItem).getAccountID()));
         accountNumberTextField.setText(table.get(currentItem).getAccountNumber());

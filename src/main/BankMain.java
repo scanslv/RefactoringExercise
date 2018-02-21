@@ -1,3 +1,7 @@
+package main;
+
+import gui.BankApplication;
+
 public class BankMain {
     public static void main(String[] args) {
         BankApplication ba = new BankApplication();
