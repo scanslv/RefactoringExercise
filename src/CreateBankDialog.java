@@ -1,9 +1,6 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -13,13 +10,12 @@ import javax.swing.JPanel;
 
 public class CreateBankDialog extends JFrame {
     private DetailsFrame detailsFrame;
-    private final static int TABLE_SIZE = 29;
     private Random rand = new Random();
 
     private String accountNumber, surname, firstName, accountType;
 
     CreateBankDialog() {
-        super("Add Bank Details");
+        super(Constants.CREATE_TITLE);
         setLayout(new BorderLayout());
 
         detailsFrame = new DetailsFrame(false, true);
@@ -41,7 +37,7 @@ public class CreateBankDialog extends JFrame {
     }
 
     private JButton setUpAddButton() {
-        JButton addButton = new JButton("Add");
+        JButton addButton = new JButton(Constants.ADD);
 
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -60,17 +56,17 @@ public class CreateBankDialog extends JFrame {
                         BankApplication.table.add(new BankAccount(id, accountNumber, surname, firstName, accountType, 0.0, 0.0));
                         dispose();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Account Number must be unique");
+                        JOptionPane.showMessageDialog(null, Constants.UNIQUE_NUMBER);
                     }
                 } else
-                    JOptionPane.showMessageDialog(null, "Please make sure all fields have values, and Account Number is a unique 8 digit number");
+                    JOptionPane.showMessageDialog(null, Constants.VALIDATION_TEXT);
             }
         });
         return addButton;
     }
 
     private JButton setUpCancelButton() {
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton(Constants.CANCEL);
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
