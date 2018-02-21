@@ -378,16 +378,10 @@ public class BankApplication extends JFrame implements ActionListener {
                 boolean found = false;
 
                 for (BankAccount bankAccount : table) {
-
                     if (accNum.equals(bankAccount.getAccountNumber().trim())) {
                         found = true;
-                        accountIDTextField.setText(bankAccount.getAccountID() + "");
-                        accountNumberTextField.setText(bankAccount.getAccountNumber());
-                        surnameTextField.setText(bankAccount.getSurname());
-                        firstNameTextField.setText(bankAccount.getFirstName());
-                        accountTypeTextField.setText(bankAccount.getAccountType());
-                        balanceTextField.setText(bankAccount.getBalance() + "");
-                        overdraftTextField.setText(bankAccount.getOverdraft() + "");
+                        currentItem = table.indexOf(bankAccount);
+                        displayDetails();
 
                     }
                 }
@@ -406,13 +400,8 @@ public class BankApplication extends JFrame implements ActionListener {
 
                     if (sName.equalsIgnoreCase((bankAccount.getSurname().trim()))) {
                         found = true;
-                        accountIDTextField.setText(bankAccount.getAccountID() + "");
-                        accountNumberTextField.setText(bankAccount.getAccountNumber());
-                        surnameTextField.setText(bankAccount.getSurname());
-                        firstNameTextField.setText(bankAccount.getFirstName());
-                        accountTypeTextField.setText(bankAccount.getAccountType());
-                        balanceTextField.setText(bankAccount.getBalance() + "");
-                        overdraftTextField.setText(bankAccount.getOverdraft() + "");
+                        currentItem = table.indexOf(bankAccount);
+                        displayDetails();
                     }
                 }
                 if (found)
@@ -461,18 +450,15 @@ public class BankApplication extends JFrame implements ActionListener {
                     table.remove(currentItem);
                     JOptionPane.showMessageDialog(null, "Account Deleted");
                     if (!table.isEmpty()) {
-                        if (table.size() == 1) {
+                        if (table.size() == 1)
                             currentItem = 0;
-                            displayDetails();
-                        } else if (currentItem == 0) {
-                            displayDetails();
-                        } else {
+                        else
                             currentItem--;
-                            displayDetails();
-                        }
+                        displayDetails();
+
                     } else {
                         currentItem = 0;
-//                        clearTextFields();
+                        clearTextFields();
                     }
                 }
                 break;
@@ -582,5 +568,15 @@ public class BankApplication extends JFrame implements ActionListener {
             currentItem = table.size() - 1;
             displayDetails();
         }
+    }
+
+    private void clearTextFields() {
+        accountIDTextField.setText("");
+        accountNumberTextField.setText("");
+        surnameTextField.setText("");
+        firstNameTextField.setText("");
+        accountTypeTextField.setText("");
+        balanceTextField.setText("");
+        overdraftTextField.setText("");
     }
 }
