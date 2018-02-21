@@ -12,7 +12,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class BankApplication extends JFrame implements ActionListener {
-    static ArrayList<BankAccount> table = new ArrayList<>();
+    ArrayList<BankAccount> table = new ArrayList<>();
     private DetailsFrame detailsFrame;
 
     private JTextField accountIDTextField, accountNumberTextField, firstNameTextField, surnameTextField, accountTypeTextField, balanceTextField, overdraftTextField;
@@ -152,11 +152,11 @@ public class BankApplication extends JFrame implements ActionListener {
         JButton nextItemButton = new JButton(new ImageIcon("next.png"));
         nextItemButton.setActionCommand(Constants.NEXT_ITEM);
         JButton prevItemButton = new JButton(new ImageIcon("prev.png"));
-        nextItemButton.setActionCommand(Constants.PREV_ITEM);
+        prevItemButton.setActionCommand(Constants.PREV_ITEM);
         JButton firstItemButton = new JButton(new ImageIcon("first.png"));
-        nextItemButton.setActionCommand(Constants.FIRST_ITEM);
+        firstItemButton.setActionCommand(Constants.FIRST_ITEM);
         JButton lastItemButton = new JButton(new ImageIcon("last.png"));
-        nextItemButton.setActionCommand(Constants.LAST_ITEM);
+        lastItemButton.setActionCommand(Constants.LAST_ITEM);
 
         buttonPanel.add(firstItemButton);
         buttonPanel.add(prevItemButton);
@@ -357,14 +357,18 @@ public class BankApplication extends JFrame implements ActionListener {
                     if (currentItem != 0) {
                         currentItem--;
                     } else
-                        currentItem = 0;
+                        currentItem = table.size() - 1;
                     displayDetails();
                 }
                 break;
             }
             case Constants.LAST_ITEM: {
+                last();
+                break;
+            }
+            case Constants.FIRST_ITEM: {
                 if (!table.isEmpty()) {
-                    currentItem = table.size() - 1;
+                    currentItem = 0;
                     displayDetails();
                 }
                 break;
@@ -474,7 +478,7 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
             case Constants.CREATE_ITEM: {
-                new CreateBankDialog();
+                new CreateBankDialog(this);
                 break;
             }
             case Constants.MODIFY_ITEM: {
@@ -570,6 +574,13 @@ public class BankApplication extends JFrame implements ActionListener {
                     dispose();
                 break;
             }
+        }
+    }
+
+    void last() {
+        if (!table.isEmpty()) {
+            currentItem = table.size() - 1;
+            displayDetails();
         }
     }
 }

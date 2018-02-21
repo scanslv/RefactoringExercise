@@ -1,23 +1,20 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class CreateBankDialog extends JFrame {
     private DetailsFrame detailsFrame;
-    private Random rand = new Random();
+    private BankApplication parent;
 
     private String accountNumber, surname, firstName, accountType;
 
-    CreateBankDialog() {
+    CreateBankDialog(BankApplication parent) {
         super(Constants.CREATE_TITLE);
         setLayout(new BorderLayout());
 
+        this.parent = parent;
         detailsFrame = new DetailsFrame(false, true);
         add(detailsFrame.buildPanel(), BorderLayout.CENTER);
         add(setUpButtonPanel(), BorderLayout.SOUTH);
@@ -44,16 +41,17 @@ public class CreateBankDialog extends JFrame {
                 if (isInputValid()) {
                     boolean accNumTaken = false;
 
-                    for (BankAccount bankAccount : BankApplication.table) {
+                    for (BankAccount bankAccount : parent.table) {
                         if (bankAccount.getAccountNumber().equalsIgnoreCase(accountNumber.trim()))
                             accNumTaken = true;
                     }
                     if (!accNumTaken) {
                         int id = 1;
-                        if (!BankApplication.table.isEmpty()) {
-                            id = BankApplication.table.get(BankApplication.table.size() - 1).getAccountID() + 1;
+                        if (!parent.table.isEmpty()) {
+                            id = parent.table.get(parent.table.size() - 1).getAccountID() + 1;
                         }
-                        BankApplication.table.add(new BankAccount(id, accountNumber, surname, firstName, accountType, 0.0, 0.0));
+                        parent.table.add(new BankAccount(id, accountNumber, surname, firstName, accountType, 0.0, 0.0));
+                        parent.last();
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, Constants.UNIQUE_NUMBER);
