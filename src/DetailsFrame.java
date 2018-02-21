@@ -37,13 +37,13 @@ class DetailsFrame extends JFrame {
     }
 
     private void setUpLabels() {
-        accountIdLabel = new JLabel("Account ID: ");
-        accountNumberLabel = new JLabel("Account Number: ");
-        lastNameLabel = new JLabel("Last Name: ");
-        firstNameLabel = new JLabel("First Name: ");
-        accountTypeLabel = new JLabel("Account Type: ");
-        balanceLabel = new JLabel("Balance: ");
-        overdraftLabel = new JLabel("Overdraft: ");
+        accountIdLabel = new JLabel(Constants.ACCOUNT_ID);
+        accountNumberLabel = new JLabel(Constants.ACCOUNT_NUMBER);
+        lastNameLabel = new JLabel(Constants.LAST_NAME);
+        firstNameLabel = new JLabel(Constants.FIRST_NAME);
+        accountTypeLabel = new JLabel(Constants.ACCOUNT_TYPE);
+        balanceLabel = new JLabel(Constants.BALANCE);
+        overdraftLabel = new JLabel(Constants.OVERDRAFT);
     }
 
     private void setUpTextFields() {

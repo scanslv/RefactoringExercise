@@ -1,6 +1,16 @@
 class Constants {
     static final String TITLE = "Bank Application";
     static final String CREATE_TITLE = "Add Bank Details";
+    static final String ALL_RECORDS_TITLE = "All Records";
+
+    static final String ACCOUNT_ID = "Account ID: ";
+    static final String ACCOUNT_NUMBER = "Account Number:";
+    static final String  LAST_NAME= "Last Name: ";
+    static final String FIRST_NAME = "First Name: ";
+    static final String ACCOUNT_TYPE = "Account Type: ";
+    static final String FULL_NAME = "Full Name: ";
+    static final String BALANCE = "Balance: ";
+    static final String OVERDRAFT = "Overdraft: ";
 
     static final String ADD = "Add";
     static final String CANCEL = "Cancel";
