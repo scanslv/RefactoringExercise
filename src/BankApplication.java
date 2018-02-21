@@ -411,28 +411,7 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
             case Constants.LIST_ALL: {
-                JFrame frame = new JFrame("TableDemo");
-                JPanel pan = new JPanel();
-
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                String col[] = {"ID", "Number", "Name", "Account Type", "Balance", "Overdraft"};
-
-                DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-                JTable jTable = new JTable(tableModel);
-                JScrollPane scrollPane = new JScrollPane(jTable);
-                jTable.setAutoCreateRowSorter(true);
-
-                for (BankAccount bankAccount : table) {
-                    Object[] objs = {bankAccount.getAccountID(), bankAccount.getAccountNumber(),
-                            bankAccount.getFirstName().trim() + " " + bankAccount.getSurname().trim(),
-                            bankAccount.getAccountType(), bankAccount.getBalance(),
-                            bankAccount.getOverdraft()};
-
-                    tableModel.addRow(objs);
-                }
-                frame.setSize(600, 500);
-                frame.add(scrollPane);
-                frame.setVisible(true);
+                new DisplayAllRecords(table);
                 break;
             }
             case Constants.SET_OVERDRAFT: {
