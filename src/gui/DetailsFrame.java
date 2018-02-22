@@ -50,27 +50,27 @@ class DetailsFrame extends JFrame {
     }
 
     private void setUpTextFields() {
-        final int nrOfColumns = 15;
-        final int nrOfCurrencyColumns = 10;
+        final int NR_OF_COLUMNS = 15;
+        final int NR_OF_CURRENCY_COLUMNS = 10;
 
-        accountIdTextField = new JTextField(nrOfColumns);
+        accountIdTextField = new JTextField(NR_OF_COLUMNS);
         accountIdTextField.setEditable(false);
 
-        accountNumberTextField = new JTextField(nrOfColumns);
+        accountNumberTextField = new JTextField(NR_OF_COLUMNS);
 
-        surnameTextField = new JTextField(nrOfColumns);
+        surnameTextField = new JTextField(NR_OF_COLUMNS);
 
-        firstNameTextField = new JTextField(nrOfColumns);
+        firstNameTextField = new JTextField(NR_OF_COLUMNS);
 
-        accountTypeTextField = new JTextField(nrOfColumns);
+        accountTypeTextField = new JTextField(NR_OF_COLUMNS);
 
-        comboBox = new JComboBox<>(new String[]{"Current", "Deposit"});
+        comboBox = new JComboBox<>(new String[]{Constants.CURRENT, Constants.DEPOSIT});
 
-        balanceTextField = new JTextField(nrOfCurrencyColumns);
+        balanceTextField = new JTextField(NR_OF_CURRENCY_COLUMNS);
         balanceTextField.setText("0.0");
         balanceTextField.setEditable(false);
 
-        overdraftTextField = new JTextField(nrOfCurrencyColumns);
+        overdraftTextField = new JTextField(NR_OF_CURRENCY_COLUMNS);
         overdraftTextField.setText("0.0");
         overdraftTextField.setEditable(false);
     }
