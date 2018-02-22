@@ -1,5 +1,7 @@
 package entity;
 
+import constants.Constants;
+
 public class BankAccount {
 
     private int accountID;
@@ -85,6 +87,6 @@ public class BankAccount {
     }
 
     public String toString() {
-        return "\nAccount id: " + accountID + "Account Num: " + accountNumber + "\nName: " + surname + " " + firstName + "\n";
+        return "\n" + Constants.ACCOUNT_ID + accountID + Constants.ACCOUNT_NUMBER + accountNumber + "\n" + Constants.FULL_NAME + surname + " " + firstName + "\n";
     }
 }

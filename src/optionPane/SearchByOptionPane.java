@@ -8,6 +8,7 @@ import javax.swing.*;
 
 public class SearchByOptionPane {
     private BankApplication parent;
+
     public SearchByOptionPane(BankApplication parent, String type) {
         this.parent = parent;
         if (type.equalsIgnoreCase(Constants.BY_SURNAME))
@@ -21,7 +22,6 @@ public class SearchByOptionPane {
         boolean found = false;
 
         for (BankAccount bankAccount : parent.table) {
-
             if (sName.equalsIgnoreCase((bankAccount.getSurname().trim()))) {
                 found = true;
                 parent.currentItem = parent.table.indexOf(bankAccount);

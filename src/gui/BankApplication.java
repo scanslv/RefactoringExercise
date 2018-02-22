@@ -2,19 +2,18 @@ package gui;
 
 import constants.Constants;
 import entity.BankAccount;
-import optionPane.DepositOptionPane;
-import optionPane.SearchByOptionPane;
-import optionPane.WithdrawOptionPane;
+import optionPane.*;
 import util.DataManipulation;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
 public class BankApplication extends JFrame implements ActionListener {
+
+    private static final BankApplication frame = new BankApplication();
     public ArrayList<BankAccount> table = new ArrayList<>();
     public int currentItem;
     private DataManipulation fileManipulation;
@@ -25,10 +24,16 @@ public class BankApplication extends JFrame implements ActionListener {
     private int previousItem = 0;
     private boolean openValues = false;
 
-    public BankApplication() {
-        super(Constants.TITLE);
+    private BankApplication() {
         detailsFrame = new DetailsFrame(true, false);
         initComponents();
+    }
+
+    public static void createAndShowGUI(){
+        frame.setTitle(Constants.TITLE);
+        frame.setSize(1200, 400);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     private void initComponents() {
@@ -184,6 +189,21 @@ public class BankApplication extends JFrame implements ActionListener {
         overdraftTextField.setText("");
     }
 
+    public void displayDetails() {
+        saveOpenValues();
+        BankAccount bankAccount = table.get(currentItem);
+        accountIDTextField.setText(String.valueOf(bankAccount.getAccountID()));
+        accountNumberTextField.setText(bankAccount.getAccountNumber());
+        surnameTextField.setText(bankAccount.getSurname());
+        firstNameTextField.setText(bankAccount.getFirstName());
+        accountTypeTextField.setText(bankAccount.getAccountType());
+        balanceTextField.setText(String.valueOf(bankAccount.getBalance()));
+        if (accountTypeTextField.getText().trim().equals(Constants.CURRENT))
+            overdraftTextField.setText(String.valueOf(bankAccount.getOverdraft()));
+        else
+            overdraftTextField.setText(Constants.ONLY_APPLIES_TO);
+    }
+
     private void saveOpenValues() {
         if (openValues) {
             surnameTextField.setEditable(false);
@@ -193,37 +213,6 @@ public class BankApplication extends JFrame implements ActionListener {
             table.get(previousItem).setFirstName(firstNameTextField.getText());
         }
         previousItem = currentItem;
-    }
-
-    public void displayDetails() {
-        saveOpenValues();
-        accountIDTextField.setText(String.valueOf(table.get(currentItem).getAccountID()));
-        accountNumberTextField.setText(table.get(currentItem).getAccountNumber());
-        surnameTextField.setText(table.get(currentItem).getSurname());
-        firstNameTextField.setText(table.get(currentItem).getFirstName());
-        accountTypeTextField.setText(table.get(currentItem).getAccountType());
-        balanceTextField.setText(String.valueOf(table.get(currentItem).getBalance()));
-        if (accountTypeTextField.getText().trim().equals(Constants.CURRENT))
-            overdraftTextField.setText(String.valueOf(table.get(currentItem).getOverdraft()));
-        else
-            overdraftTextField.setText(Constants.ONLY_APPLIES_TO);
-    }
-
-    void last() {
-        if (!table.isEmpty()) {
-            currentItem = table.size() - 1;
-            displayDetails();
-        }
-    }
-
-    private void clearTextFields() {
-        accountIDTextField.setText("");
-        accountNumberTextField.setText("");
-        surnameTextField.setText("");
-        firstNameTextField.setText("");
-        accountTypeTextField.setText("");
-        balanceTextField.setText("");
-        overdraftTextField.setText("");
     }
 
     @Override
@@ -273,35 +262,15 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
             case Constants.SET_OVERDRAFT: {
-                if (table.get(currentItem).getAccountType().trim().equals(Constants.CURRENT)) {
-                    String newOverdraftStr = JOptionPane.showInputDialog(null, Constants.NEW_OVERDRAFT, JOptionPane.OK_CANCEL_OPTION);
-                    overdraftTextField.setText(newOverdraftStr);
-                    table.get(currentItem).setOverdraft(Double.parseDouble(newOverdraftStr));
-                } else
-                    JOptionPane.showMessageDialog(null, Constants.OVERDRAFT_MSG);
+                setOverdraft();
                 break;
             }
             case Constants.DELETE_ITEM: {
-                openValues = false;
-                if (!table.isEmpty()) {
-                    table.remove(currentItem);
-                    JOptionPane.showMessageDialog(null, Constants.ACCOUNT_DELETED);
-                    if (!table.isEmpty()) {
-                        if (table.size() == 1)
-                            currentItem = 0;
-                        else
-                            currentItem--;
-                        displayDetails();
-
-                    } else {
-                        currentItem = 0;
-                        clearTextFields();
-                    }
-                }
+                deleteItem();
                 break;
             }
             case Constants.CREATE_ITEM: {
-                new CreateBankDialog(this);
+                new CreateBankFrame(this);
                 break;
             }
             case Constants.MODIFY_ITEM: {
@@ -326,14 +295,7 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
             case Constants.CALCULATE_INTEREST: {
-                for (BankAccount bankAccount : table) {
-                    if (bankAccount.getAccountType().equals(Constants.DEPOSIT)) {
-                        double equation = 1 + ((interestRate) / 100);
-                        bankAccount.setBalance(bankAccount.getBalance() * equation);
-                    }
-                }
-                displayDetails();
-                JOptionPane.showMessageDialog(null, Constants.BALLANCE_UPDATED);
+                calculateInterest();
                 break;
             }
             case Constants.OPEN_FILE: {
@@ -360,5 +322,61 @@ public class BankApplication extends JFrame implements ActionListener {
                 break;
             }
         }
+    }
+
+    void last() {
+        if (!table.isEmpty()) {
+            currentItem = table.size() - 1;
+            displayDetails();
+        }
+    }
+
+    private void setOverdraft() {
+        if (table.get(currentItem).getAccountType().trim().equals(Constants.CURRENT)) {
+            String newOverdraftStr = JOptionPane.showInputDialog(null, Constants.NEW_OVERDRAFT, JOptionPane.OK_CANCEL_OPTION);
+            overdraftTextField.setText(newOverdraftStr);
+            table.get(currentItem).setOverdraft(Double.parseDouble(newOverdraftStr));
+        } else
+            JOptionPane.showMessageDialog(null, Constants.OVERDRAFT_MSG);
+    }
+
+    private void deleteItem() {
+        openValues = false;
+        if (!table.isEmpty()) {
+            table.remove(currentItem);
+            if (!table.isEmpty()) {
+                if (table.size() == 1)
+                    currentItem = 0;
+                else
+                    currentItem--;
+                displayDetails();
+
+            } else {
+                currentItem = 0;
+                clearTextFields();
+            }
+            JOptionPane.showMessageDialog(null, Constants.ACCOUNT_DELETED);
+        }
+    }
+
+    private void calculateInterest() {
+        for (BankAccount bankAccount : table) {
+            if (bankAccount.getAccountType().equals(Constants.DEPOSIT)) {
+                double equation = 1 + ((interestRate) / 100);
+                bankAccount.setBalance(bankAccount.getBalance() * equation);
+            }
+        }
+        displayDetails();
+        JOptionPane.showMessageDialog(null, Constants.BALANCE_UPDATED);
+    }
+
+    private void clearTextFields() {
+        accountIDTextField.setText("");
+        accountNumberTextField.setText("");
+        surnameTextField.setText("");
+        firstNameTextField.setText("");
+        accountTypeTextField.setText("");
+        balanceTextField.setText("");
+        overdraftTextField.setText("");
     }
 }

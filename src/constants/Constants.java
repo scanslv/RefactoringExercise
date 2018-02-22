@@ -47,8 +47,8 @@ public class Constants {
 
     public static final String CURRENT = "Current";
     public static final String DEPOSIT = "Deposit";
-    public static final String ONLY_APPLIES_TO = "Only applies to current accs";
 
+    public static final String ONLY_APPLIES_TO = "Only applies to current accs";
     public static final String FILE_NOT_EXIST = "File Does Not Exist.";
     public static final String ACCOUNT_SAVED = "Accounts saved to ";
     public static final String SAVE_CANCELLED = "Save cancelled by user";
@@ -66,7 +66,7 @@ public class Constants {
     public static final String NOT_FOUND = " not found.";
     public static final String TRANSACTION_EXCEEDS = "Transaction exceeds overdraft limit";
     public static final String INSUFFICIENT_FUNDS = "Insufficient funds.";
-    public static final String BALLANCE_UPDATED = "Balances Updated";
+    public static final String BALANCE_UPDATED = "Balances Updated";
     public static final String UNIQUE_NUMBER = "Account Number must be unique";
     public static final String VALIDATION_TEXT = "Please make sure all fields have values, and Account Number is a unique 8 digit number";
     public static final String SEARCH_FOR_SURNAME = "Search for surname: ";
