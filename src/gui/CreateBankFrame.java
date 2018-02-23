@@ -84,14 +84,13 @@ public class CreateBankFrame extends JFrame implements ActionListener {
     }
 
     private boolean isInputValid() {
-        boolean valid = true;
+        boolean valid;
         getValues();
 
-        if (accountNumber == null || accountNumber.length() != 8)
+        valid = accountNrValid();
+        if (surname == null || surname.isEmpty() || surname.length() > 20)
             valid = false;
-        if (surname == null)
-            valid = false;
-        if (firstName == null)
+        if (firstName == null || firstName.isEmpty() || firstName.length() > 21)
             valid = false;
         if (accountType == null)
             valid = false;
@@ -100,6 +99,14 @@ public class CreateBankFrame extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, Constants.VALIDATION_TEXT);
 
         return valid;
+    }
+
+    private boolean accountNrValid() {
+        try {
+            return accountNumber != null && accountNumber.length() == 8 && (Integer.parseInt(accountNumber) > 0);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private boolean isNumTaken() {

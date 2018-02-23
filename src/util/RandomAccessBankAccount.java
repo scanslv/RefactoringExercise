@@ -5,7 +5,7 @@ import entity.BankAccount;
 import java.io.RandomAccessFile;
 import java.io.IOException;
 
-class RandomAccessBankAccount extends BankAccount {
+public class RandomAccessBankAccount extends BankAccount {
 
     RandomAccessBankAccount() {
         this(0, "", "", "", "", 0.0, 0.0);

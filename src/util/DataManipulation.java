@@ -12,7 +12,7 @@ public class DataManipulation {
     private JFileChooser fc;
     private RandomAccessFile input;
     private RandomAccessFile output;
-    private String fileToSaveAs = "";
+    private String fileToSaveAs;
 
     public DataManipulation(BankApplication parent) {
         this.parent = parent;
@@ -57,7 +57,7 @@ public class DataManipulation {
     } // end method openFile
 
     private void openFileWrite() {
-        if (!fileToSaveAs.equalsIgnoreCase("")) {
+        if (fileToSaveAs != null && !fileToSaveAs.isEmpty()) {
             // open file
             try {
                 output = new RandomAccessFile(fileToSaveAs, "rw");
